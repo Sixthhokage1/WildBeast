@@ -404,7 +404,7 @@ Commands.e621 = {
   fn: function (msg, suffix) {
     msg.channel.sendTyping()
     request.post(`https://e621.net/post/index.json`)
-    .query({ limit: '30', tags: suffix })
+    .query({ limit: '30', tags: '-rating:e ' + suffix })
     .set({'Accept': 'application/json', 'User-Agent': 'Superagent Node.js'})
     // Fetching 30 posts from E621 with the given tags
     .end(function (err, result) {
@@ -424,44 +424,6 @@ Commands.e621 = {
         }
       } else {
         Logger.error(`Got an error: ${err}, status code: ${result.status}`)
-      }
-    })
-  }
-}
-
-Commands.rule34 = {
-  name: 'rule34',
-  help: 'Rule#34 : If it exists there is porn of it. If not, start uploading.',
-  level: 0,
-  nsfw: true,
-  fn: function (msg, suffix) {
-    msg.channel.sendTyping()
-    request.post('http://rule34.xxx/index.php') // Fetching 100 rule34 pics
-    .query({ page: 'dapi', s: 'post', q: 'index', tags: suffix })
-    .end((err, result) => {
-      if (err || result.status !== 200) {
-        Logger.error(`${err}, status code ${result.status}`)
-        msg.channel.sendMessage('The API returned an unconventional response.')
-      }
-      var xml2js = require('xml2js')
-      if (result.text.length < 75) {
-        msg.reply('sorry, nothing found.') // Correct me if it's wrong.
-      } else {
-        xml2js.parseString(result.text, (err, reply) => {
-          if (err) {
-            msg.channel.sendMessage('The API returned an unconventional response.')
-          } else {
-            var count = Math.floor((Math.random() * reply.posts.post.length))
-            var FurryArray = []
-            if (!suffix) {
-              FurryArray.push(msg.author.mention + ", you've searched for `random`")
-            } else {
-              FurryArray.push(msg.author.mention + ", you've searched for `" + suffix + '`')
-            }
-            FurryArray.push(`https:${reply.posts.post[count].$.file_url}`)
-            msg.channel.sendMessage(FurryArray.join('\n'))
-          }
-        })
       }
     })
   }
