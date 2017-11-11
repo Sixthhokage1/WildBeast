@@ -60,7 +60,7 @@ Commands.say = {
 
 Commands.purge = {
   name: 'purge',
-  help: 'Use this command to delete any amount of message up to 100.',
+  help: 'Use this command to delete any amount of message up to 500.',
   usage: '<number>',
   aliases: ['prune'],
   noDM: true,
@@ -75,8 +75,8 @@ Commands.purge = {
     } else if (!botPerms.Text.MANAGE_MESSAGES) {
       msg.reply('I do not have `Manage Messages` permission!')
     } else {
-      if (!suffix || isNaN(suffix) || suffix > 100 || suffix < 0) {
-        msg.reply('Please try again with a number between **0** to **100**.')
+      if (!suffix || isNaN(suffix) || suffix > 500 || suffix < 0) {
+        msg.reply('Please try again with a number between **0** to **500**.')
       } else {
         msg.channel.fetchMessages(suffix).then((result) => {
           var cantDelete = 0
